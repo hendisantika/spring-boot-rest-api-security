@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,6 +36,12 @@ public class AccountService {
         if (accountRepository.findOneByUsername("palpatine") == null) {
             save(new Account("palpatine", "palpatine", AccountRole.EMPEROR.name()));
         }
+    }
+
+    @Transactional
+    private Account save(Account user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return accountRepository.save(user);
     }
 
 }
