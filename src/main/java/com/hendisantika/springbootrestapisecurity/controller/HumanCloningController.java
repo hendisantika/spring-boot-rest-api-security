@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,5 +70,14 @@ public class HumanCloningController {
         Clone clone = getOne(id);
         cloneRepository.delete(clone);
     }
+
+    @PutMapping("/order66")
+    @PreAuthorize("hasAuthority('ROLE_EMPEROR')")
+    public List<Clone> executeOrder66() {
+        List<Clone> clones = repository.findAll();
+        clones.stream().forEach(clone -> clone.setAffiliation("Galactic Empire"));
+        return repository.saveAll(clones);
+    }
+
 
 }
