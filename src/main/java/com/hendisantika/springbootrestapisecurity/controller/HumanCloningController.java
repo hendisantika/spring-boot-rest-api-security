@@ -1,6 +1,7 @@
 package com.hendisantika.springbootrestapisecurity.controller;
 
 import com.hendisantika.springbootrestapisecurity.entity.Clone;
+import com.hendisantika.springbootrestapisecurity.exception.BeanNotFound;
 import com.hendisantika.springbootrestapisecurity.repository.CloneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +54,11 @@ public class HumanCloningController {
     @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
     public Clone createClone(@RequestBody Clone clone) {
         return cloneRepository.save(clone);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    public Clone findById(@PathVariable("id") Long id) throws BeanNotFound {
+        return getOne(id);
     }
 }
