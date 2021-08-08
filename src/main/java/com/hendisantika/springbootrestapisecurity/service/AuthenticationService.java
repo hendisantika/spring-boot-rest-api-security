@@ -35,4 +35,8 @@ public class AuthenticationService implements UserDetailsService {
 
         return user;
     }
+
+    private User createUser(Account u) {
+        return new User(u.getUsername(), u.getPassword(), createAuthorities(u));
+    }
 }
