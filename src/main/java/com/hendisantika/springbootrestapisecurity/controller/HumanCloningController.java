@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,4 +62,12 @@ public class HumanCloningController {
     public Clone findById(@PathVariable("id") Long id) throws BeanNotFound {
         return getOne(id);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    public void delete(@PathVariable("id") Long id) throws BeanNotFound {
+        Clone clone = getOne(id);
+        cloneRepository.delete(clone);
+    }
+
 }
