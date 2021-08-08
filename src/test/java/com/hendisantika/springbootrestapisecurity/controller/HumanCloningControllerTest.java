@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
+
 /**
  * Created by IntelliJ IDEA.
  * Project : spring-boot-rest-api-security
@@ -42,6 +44,23 @@ public class HumanCloningControllerTest {
         Assert.assertNotNull(output);
         Mockito.verify(repository).save(input);
         Assert.assertEquals(saved, output);
+    }
+
+    @Test
+    public void shouldFindOneBean_OK() throws Exception {
+        // Given
+        Long input = 1L;
+        Clone found = getClone(input);
+        Optional<Clone> inDb = Optional.ofNullable(found);
+        Mockito.when(repository.findById(input)).thenReturn(inDb);
+
+        // When
+        Clone output = controller.findById(input);
+
+        // Then
+        Assert.assertNotNull(output);
+        Mockito.verify(repository).findById(input);
+        Assert.assertEquals(found, output);
     }
 
 }
