@@ -2,6 +2,7 @@ package com.hendisantika.springbootrestapisecurity.controller;
 
 import com.hendisantika.springbootrestapisecurity.SpringBootRestApiSecurityApplication;
 import com.hendisantika.springbootrestapisecurity.entity.Clone;
+import com.hendisantika.springbootrestapisecurity.exception.BeanNotFound;
 import com.hendisantika.springbootrestapisecurity.repository.CloneRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,19 @@ public class HumanCloningControllerTest {
         Assert.assertNotNull(output);
         Mockito.verify(repository).findById(input);
         Assert.assertEquals(found, output);
+    }
+
+    @Test(expected = BeanNotFound.class)
+    public void shouldFindOneBean_KO_NotFound() throws Exception {
+        // Given
+        Long input = 1L;
+        Optional<Clone> inDb = Optional.ofNullable(null);
+        Mockito.when(repository.findById(input)).thenReturn(inDb);
+
+        // When
+        controller.findById(input);
+
+        // Then
     }
 
 }
