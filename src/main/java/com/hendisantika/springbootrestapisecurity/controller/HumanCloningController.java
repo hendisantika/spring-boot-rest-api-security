@@ -10,6 +10,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,5 +46,11 @@ public class HumanCloningController {
                                             @SortDefault(sort = "id", direction = Sort.Direction.ASC)
                                     }) Pageable pageable) {
         return cloneRepository.findAll(pageable);
+    }
+
+    @PostMapping()
+    @PreAuthorize("hasAnyAuthority('ROLE_KAMINOAIN', 'ROLE_EMPEROR')")
+    public Clone createClone(@RequestBody Clone clone) {
+        return cloneRepository.save(clone);
     }
 }
