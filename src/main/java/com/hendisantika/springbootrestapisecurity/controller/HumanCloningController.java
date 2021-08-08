@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -74,9 +75,17 @@ public class HumanCloningController {
     @PutMapping("/order66")
     @PreAuthorize("hasAuthority('ROLE_EMPEROR')")
     public List<Clone> executeOrder66() {
-        List<Clone> clones = repository.findAll();
+        List<Clone> clones = cloneRepository.findAll();
         clones.stream().forEach(clone -> clone.setAffiliation("Galactic Empire"));
-        return repository.saveAll(clones);
+        return cloneRepository.saveAll(clones);
+    }
+
+    protected Clone getOne(Long id) throws BeanNotFound {
+        Optional<Clone> clone = cloneRepository.findById(id);
+        if (!clone.isPresent()) {
+            throw new BeanNotFound("Can't find clone with id : " + id);
+        }
+        return clone.get();
     }
 
 
