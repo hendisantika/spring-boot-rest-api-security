@@ -2,15 +2,19 @@ package com.hendisantika.springbootrestapisecurity.controller;
 
 import com.hendisantika.springbootrestapisecurity.SpringBootRestApiSecurityApplication;
 import com.hendisantika.springbootrestapisecurity.entity.Clone;
+import com.hendisantika.springbootrestapisecurity.entity.CloneType;
 import com.hendisantika.springbootrestapisecurity.exception.BeanNotFound;
 import com.hendisantika.springbootrestapisecurity.repository.CloneRepository;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Optional;
 
@@ -23,6 +27,7 @@ import java.util.Optional;
  * Date: 09/08/21
  * Time: 05.34
  */
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringBootRestApiSecurityApplication.class)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class HumanCloningControllerTest {
@@ -64,17 +69,32 @@ public class HumanCloningControllerTest {
         Assert.assertEquals(found, output);
     }
 
-    @Test(expected = BeanNotFound.class)
+    public static Clone getClone(Long id) {
+        Clone clone = new Clone();
+
+        clone.setId(id);
+        clone.setPlatoon(501);
+        clone.setType(CloneType.gunner);
+        clone.setCodeName("CT-7567");
+
+        return clone;
+    }
+
+    @Test
     public void shouldFindOneBean_KO_NotFound() throws Exception {
-        // Given
-        Long input = 1L;
-        Optional<Clone> inDb = Optional.ofNullable(null);
-        Mockito.when(repository.findById(input)).thenReturn(inDb);
 
-        // When
-        controller.findById(input);
+        Assertions.assertThrows(BeanNotFound.class, () -> {
+            // Given
+            Long input = 1L;
+            Optional<Clone> inDb = Optional.ofNullable(null);
+            Mockito.when(repository.findById(input)).thenReturn(inDb);
 
-        // Then
+            // When
+            controller.findById(input);
+
+            // Then
+        });
+
     }
 
 }
