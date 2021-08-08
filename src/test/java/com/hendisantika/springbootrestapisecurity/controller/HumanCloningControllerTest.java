@@ -1,7 +1,11 @@
 package com.hendisantika.springbootrestapisecurity.controller;
 
 import com.hendisantika.springbootrestapisecurity.SpringBootRestApiSecurityApplication;
+import com.hendisantika.springbootrestapisecurity.entity.Clone;
 import com.hendisantika.springbootrestapisecurity.repository.CloneRepository;
+import org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,5 +27,21 @@ public class HumanCloningControllerTest {
 
     @MockBean
     private CloneRepository repository;
+
+    @Test
+    public void shouldCreateBean_OK() throws Exception {
+        // Given
+        Clone input = getClone(null);
+        Clone saved = getClone(1L);
+        Mockito.when(repository.save(input)).thenReturn(saved);
+
+        // When
+        Clone output = controller.createClone(input);
+
+        // Then
+        Assert.assertNotNull(output);
+        Mockito.verify(repository).save(input);
+        Assert.assertEquals(saved, output);
+    }
 
 }
