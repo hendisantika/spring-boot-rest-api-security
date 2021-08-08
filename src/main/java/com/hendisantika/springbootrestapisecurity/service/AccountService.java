@@ -1,9 +1,13 @@
 package com.hendisantika.springbootrestapisecurity.service;
 
+import com.hendisantika.springbootrestapisecurity.entity.Account;
+import com.hendisantika.springbootrestapisecurity.entity.AccountRole;
 import com.hendisantika.springbootrestapisecurity.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,5 +26,15 @@ public class AccountService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void initialize() {
+        if (accountRepository.findOneByUsername("kamino") == null) {
+            save(new Account("kamino", "kamino", AccountRole.KAMINOAIN.name()));
+        }
+        if (accountRepository.findOneByUsername("palpatine") == null) {
+            save(new Account("palpatine", "palpatine", AccountRole.EMPEROR.name()));
+        }
+    }
 
 }
