@@ -1,8 +1,11 @@
 package com.hendisantika.springbootrestapisecurity.service;
 
+import com.hendisantika.springbootrestapisecurity.entity.Account;
 import com.hendisantika.springbootrestapisecurity.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,4 +22,17 @@ public class AuthenticationService implements UserDetailsService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Override
+    public User loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Account u = accountRepository.findOneByUsername(userName);
+        System.out.println(u.toString());
+        if (u == null) {
+            throw new UsernameNotFoundException("Utilisateur non trouvé : " + userName);
+        }
+
+        User user = createUser(u);
+
+        return user;
+    }
 }
